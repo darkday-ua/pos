@@ -25,35 +25,36 @@ import frozendict  # noqa: F401
 
 from openapi_client import schemas  # noqa: F401
 
-from openapi_client.model.application_response import ApplicationResponse
+from openapi_client.model.contribution_type_response import ContributionTypeResponse
 
-# Path params
-ApplicationIdSchema = schemas.StrSchema
-RequestRequiredPathParams = typing_extensions.TypedDict(
-    'RequestRequiredPathParams',
-    {
-        'applicationId': typing.Union[ApplicationIdSchema, str, ],
-    }
-)
-RequestOptionalPathParams = typing_extensions.TypedDict(
-    'RequestOptionalPathParams',
-    {
-    },
-    total=False
-)
+from . import path
 
 
-class RequestPathParams(RequestRequiredPathParams, RequestOptionalPathParams):
-    pass
+
+class SchemaFor200ResponseBodyApplicationJson(
+    schemas.ListSchema
+):
 
 
-request_path_application_id = api_client.PathParameter(
-    name="applicationId",
-    style=api_client.ParameterStyle.SIMPLE,
-    schema=ApplicationIdSchema,
-    required=True,
-)
-SchemaFor200ResponseBodyApplicationJson = ApplicationResponse
+    class MetaOapg:
+        
+        @staticmethod
+        def items() -> typing.Type['ContributionTypeResponse']:
+            return ContributionTypeResponse
+
+    def __new__(
+        cls,
+        _arg: typing.Union[typing.Tuple['ContributionTypeResponse'], typing.List['ContributionTypeResponse']],
+        _configuration: typing.Optional[schemas.Configuration] = None,
+    ) -> 'SchemaFor200ResponseBodyApplicationJson':
+        return super().__new__(
+            cls,
+            _arg,
+            _configuration=_configuration,
+        )
+
+    def __getitem__(self, i: int) -> 'ContributionTypeResponse':
+        return super().__getitem__(i)
 
 
 @dataclass
@@ -72,6 +73,9 @@ _response_for_200 = api_client.OpenApiResponse(
             schema=SchemaFor200ResponseBodyApplicationJson),
     },
 )
+_status_code_to_response = {
+    '200': _response_for_200,
+}
 _all_accept_content_types = (
     'application/json',
 )
@@ -79,9 +83,8 @@ _all_accept_content_types = (
 
 class BaseApi(api_client.Api):
     @typing.overload
-    def _get_application_by_id_oapg(
+    def _get_coins_list_oapg(
         self,
-        path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
         stream: bool = False,
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
@@ -91,19 +94,17 @@ class BaseApi(api_client.Api):
     ]: ...
 
     @typing.overload
-    def _get_application_by_id_oapg(
+    def _get_coins_list_oapg(
         self,
         skip_deserialization: typing_extensions.Literal[True],
-        path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
         stream: bool = False,
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
     ) -> api_client.ApiResponseWithoutDeserialization: ...
 
     @typing.overload
-    def _get_application_by_id_oapg(
+    def _get_coins_list_oapg(
         self,
-        path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
         stream: bool = False,
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
@@ -113,35 +114,20 @@ class BaseApi(api_client.Api):
         api_client.ApiResponseWithoutDeserialization,
     ]: ...
 
-    def _get_application_by_id_oapg(
+    def _get_coins_list_oapg(
         self,
-        path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
         stream: bool = False,
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: bool = False,
     ):
         """
-        Get application by Id
+        Get coins list
         :param skip_deserialization: If true then api_response.response will be set but
             api_response.body and api_response.headers will not be deserialized into schema
             class instances
         """
-        self._verify_typed_dict_inputs_oapg(RequestPathParams, path_params)
         used_path = path.value
-
-        _path_params = {}
-        for parameter in (
-            request_path_application_id,
-        ):
-            parameter_data = path_params.get(parameter.name, schemas.unset)
-            if parameter_data is schemas.unset:
-                continue
-            serialized_data = parameter.serialize(parameter_data)
-            _path_params.update(serialized_data)
-
-        for k, v in _path_params.items():
-            used_path = used_path.replace('{%s}' % k, v)
 
         _headers = HTTPHeaderDict()
         # TODO add cookie handling
@@ -176,13 +162,12 @@ class BaseApi(api_client.Api):
         return api_response
 
 
-class GetApplicationById(BaseApi):
+class GetCoinsList(BaseApi):
     # this class is used by api classes that refer to endpoints with operationId fn names
 
     @typing.overload
-    def get_application_by_id(
+    def get_coins_list(
         self,
-        path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
         stream: bool = False,
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
@@ -192,19 +177,17 @@ class GetApplicationById(BaseApi):
     ]: ...
 
     @typing.overload
-    def get_application_by_id(
+    def get_coins_list(
         self,
         skip_deserialization: typing_extensions.Literal[True],
-        path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
         stream: bool = False,
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
     ) -> api_client.ApiResponseWithoutDeserialization: ...
 
     @typing.overload
-    def get_application_by_id(
+    def get_coins_list(
         self,
-        path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
         stream: bool = False,
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
@@ -214,16 +197,14 @@ class GetApplicationById(BaseApi):
         api_client.ApiResponseWithoutDeserialization,
     ]: ...
 
-    def get_application_by_id(
+    def get_coins_list(
         self,
-        path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
         stream: bool = False,
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: bool = False,
     ):
-        return self._get_application_by_id_oapg(
-            path_params=path_params,
+        return self._get_coins_list_oapg(
             accept_content_types=accept_content_types,
             stream=stream,
             timeout=timeout,
@@ -237,7 +218,6 @@ class ApiForget(BaseApi):
     @typing.overload
     def get(
         self,
-        path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
         stream: bool = False,
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
@@ -250,7 +230,6 @@ class ApiForget(BaseApi):
     def get(
         self,
         skip_deserialization: typing_extensions.Literal[True],
-        path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
         stream: bool = False,
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
@@ -259,7 +238,6 @@ class ApiForget(BaseApi):
     @typing.overload
     def get(
         self,
-        path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
         stream: bool = False,
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
@@ -271,14 +249,12 @@ class ApiForget(BaseApi):
 
     def get(
         self,
-        path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
         stream: bool = False,
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
         skip_deserialization: bool = False,
     ):
-        return self._get_application_by_id_oapg(
-            path_params=path_params,
+        return self._get_coins_list_oapg(
             accept_content_types=accept_content_types,
             stream=stream,
             timeout=timeout,

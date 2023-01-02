@@ -9,6 +9,7 @@ class PathValues(str, enum.Enum):
     HEALTH = "/health"
     APPLICATIONS = "/applications"
     APPLICATIONS_APPLICATION_ID = "/applications/{applicationId}"
+    APPLICATIONS_COINS_LIST = "/applications/coins/list"
     APPLICATIONS_APPLICATION_ID_CONTRIBUTION_TYPES = "/applications/{applicationId}/contributionTypes"
     APPLICATIONS_APPLICATION_ID_CONTRIBUTION_TYPES_NAME = "/applications/{applicationId}/contributionTypes/{name}"
     CONTRIBUTIONS = "/contributions"

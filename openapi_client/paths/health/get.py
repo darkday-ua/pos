@@ -26,9 +26,6 @@ from openapi_client import schemas  # noqa: F401
 
 from . import path
 
-_auth = [
-    'JWTAuth',
-]
 
 
 @dataclass
@@ -60,6 +57,7 @@ class BaseApi(api_client.Api):
     @typing.overload
     def _contributions_health_oapg(
         self,
+        skip_deserialization: typing_extensions.Literal[True],
         stream: bool = False,
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
     ) -> api_client.ApiResponseWithoutDeserialization: ...
@@ -93,7 +91,6 @@ class BaseApi(api_client.Api):
         response = self.api_client.call_api(
             resource_path=used_path,
             method='get'.upper(),
-            auth_settings=_auth,
             stream=stream,
             timeout=timeout,
         )
@@ -108,7 +105,11 @@ class BaseApi(api_client.Api):
                 api_response = api_client.ApiResponseWithoutDeserialization(response=response)
 
         if not 200 <= response.status <= 299:
-            raise exceptions.ApiException(api_response=api_response)
+            raise exceptions.ApiException(
+                status=response.status,
+                reason=response.reason,
+                api_response=api_response
+            )
 
         return api_response
 
@@ -129,6 +130,7 @@ class ContributionsHealth(BaseApi):
     @typing.overload
     def contributions_health(
         self,
+        skip_deserialization: typing_extensions.Literal[True],
         stream: bool = False,
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
     ) -> api_client.ApiResponseWithoutDeserialization: ...
@@ -173,6 +175,7 @@ class ApiForget(BaseApi):
     @typing.overload
     def get(
         self,
+        skip_deserialization: typing_extensions.Literal[True],
         stream: bool = False,
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
     ) -> api_client.ApiResponseWithoutDeserialization: ...

@@ -97,9 +97,6 @@ request_path_contribution_id = api_client.PathParameter(
     schema=ContributionIdSchema,
     required=True,
 )
-_auth = [
-    'JWTAuth',
-]
 
 
 class SchemaFor200ResponseBodyApplicationJson(
@@ -115,12 +112,12 @@ class SchemaFor200ResponseBodyApplicationJson(
 
     def __new__(
         cls,
-        arg: typing.Union[typing.Tuple['ReviewResponse'], typing.List['ReviewResponse']],
+        _arg: typing.Union[typing.Tuple['ReviewResponse'], typing.List['ReviewResponse']],
         _configuration: typing.Optional[schemas.Configuration] = None,
     ) -> 'SchemaFor200ResponseBodyApplicationJson':
         return super().__new__(
             cls,
-            arg,
+            _arg,
             _configuration=_configuration,
         )
 
@@ -169,6 +166,7 @@ class BaseApi(api_client.Api):
     @typing.overload
     def _get_reviews_by_contribution_oapg(
         self,
+        skip_deserialization: typing_extensions.Literal[True],
         query_params: RequestQueryParams = frozendict.frozendict(),
         path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -247,7 +245,6 @@ class BaseApi(api_client.Api):
             resource_path=used_path,
             method='get'.upper(),
             headers=_headers,
-            auth_settings=_auth,
             stream=stream,
             timeout=timeout,
         )
@@ -262,7 +259,11 @@ class BaseApi(api_client.Api):
                 api_response = api_client.ApiResponseWithoutDeserialization(response=response)
 
         if not 200 <= response.status <= 299:
-            raise exceptions.ApiException(api_response=api_response)
+            raise exceptions.ApiException(
+                status=response.status,
+                reason=response.reason,
+                api_response=api_response
+            )
 
         return api_response
 
@@ -286,6 +287,7 @@ class GetReviewsByContribution(BaseApi):
     @typing.overload
     def get_reviews_by_contribution(
         self,
+        skip_deserialization: typing_extensions.Literal[True],
         query_params: RequestQueryParams = frozendict.frozendict(),
         path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,
@@ -345,6 +347,7 @@ class ApiForget(BaseApi):
     @typing.overload
     def get(
         self,
+        skip_deserialization: typing_extensions.Literal[True],
         query_params: RequestQueryParams = frozendict.frozendict(),
         path_params: RequestPathParams = frozendict.frozendict(),
         accept_content_types: typing.Tuple[str] = _all_accept_content_types,

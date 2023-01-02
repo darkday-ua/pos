@@ -69,6 +69,7 @@ class BaseApi(api_client.Api):
     @typing.overload
     def _contributions_options_oapg(
         self,
+        skip_deserialization: typing_extensions.Literal[True],
         stream: bool = False,
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
     ) -> api_client.ApiResponseWithoutDeserialization: ...
@@ -116,7 +117,11 @@ class BaseApi(api_client.Api):
                 api_response = api_client.ApiResponseWithoutDeserialization(response=response)
 
         if not 200 <= response.status <= 299:
-            raise exceptions.ApiException(api_response=api_response)
+            raise exceptions.ApiException(
+                status=response.status,
+                reason=response.reason,
+                api_response=api_response
+            )
 
         return api_response
 
@@ -137,6 +142,7 @@ class ContributionsOptions(BaseApi):
     @typing.overload
     def contributions_options(
         self,
+        skip_deserialization: typing_extensions.Literal[True],
         stream: bool = False,
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
     ) -> api_client.ApiResponseWithoutDeserialization: ...
@@ -181,6 +187,7 @@ class ApiForoptions(BaseApi):
     @typing.overload
     def options(
         self,
+        skip_deserialization: typing_extensions.Literal[True],
         stream: bool = False,
         timeout: typing.Optional[typing.Union[int, typing.Tuple]] = None,
     ) -> api_client.ApiResponseWithoutDeserialization: ...

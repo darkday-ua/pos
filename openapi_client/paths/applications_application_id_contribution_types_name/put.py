@@ -73,9 +73,6 @@ request_body_contribution_type_request = api_client.RequestBody(
             schema=SchemaForRequestBodyApplicationJson),
     },
 )
-_auth = [
-    'JWTAuth',
-]
 
 
 @dataclass
@@ -196,7 +193,6 @@ class BaseApi(api_client.Api):
             headers=_headers,
             fields=_fields,
             body=_body,
-            auth_settings=_auth,
             stream=stream,
             timeout=timeout,
         )
@@ -211,7 +207,11 @@ class BaseApi(api_client.Api):
                 api_response = api_client.ApiResponseWithoutDeserialization(response=response)
 
         if not 200 <= response.status <= 299:
-            raise exceptions.ApiException(api_response=api_response)
+            raise exceptions.ApiException(
+                status=response.status,
+                reason=response.reason,
+                api_response=api_response
+            )
 
         return api_response
 
